@@ -1,20 +1,56 @@
-<div class="container ">
-<div class="jumbotron">
-    <h1> E X T R A   E X T R A </h1>      
-    <p>See Todays Headlines</p>
-  </div>
+ <div id="containermain" style="background-image: url('assets/newstand.jpg');" >
+        
+        <div class="jumbotron"   style="background-color:#fee2b3";>
+            <h1 style="text-align:center;" style="font-size:60px" ><b> EXTRA EXTRA </b></h1>      
+            <p  style="text-align:center;"><b>See Todays Headlines</b></p>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3">
+                    <button type="button" class="btn btn-success" style="color: black">Search For Headlines</button>
+                </div>
+                <div class="col-sm-3">
+                   
+                    <button type="button" class="btn btn-success" style="color: black" >Save An Article by ID</button>
+                </div>
+                <div class="col-sm-3">
+                    
+                    <button type="button" class="btn btn-success" style="color: black">Create a Note</button>
+                </div>
+                <div class="col-sm-3">
+                    <button type="button" class="btn btn-success" style="color: black" >Delete a Note</button>
+                </div>
+            </div> <!--end row 1   -->
+            <br><br>
+            
+            
+            <div class="row"    >
+                <div class="col-sm-">
+                    <div class=article-container    style="background-color:#fee2b3";></div>
+                        {{#each Article}}
+                        {{this.title}}
+                        <a class="articleurl"href={{link}} ></a>
+                        <br>
+                        <button type="button" class="btn btn-warning save-article" data-id={{id}} >Save This Article</button> </a>
+                        <button type="button" class="btn btn-primary addNoteButton generalButton" data-id={{id}} data-notes={{notes}}>Add Note</button>
+                    </div>    
+                </div>
+            </div>    
+            <br>
+                
+
+
+            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+          
+
+
+        </div>  <!--end container  --> 
+        
+      
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-</div>
+    </div>

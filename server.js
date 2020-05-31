@@ -1,8 +1,6 @@
 var express = require("express");
 var logger = require("morgan");
 var mongoose = require("mongoose");
-var exphbs = require('express-handlebars');
-
 
 // Our scraping tools
 // Axios is a promised-based http library, similar to jQuery's Ajax method
@@ -25,39 +23,40 @@ app.use(logger("dev"));
 // Parse request body as JSON
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-// Set Handlebars as the default templating engine.
-app.engine("handlebars", exphbs({ defaultLayout: "main" }));
-app.set("view engine", "handlebars");
-
-
-// Make public a static folder
 app.use(express.static("public"));
 
 // Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/unit18Populater", { useNewUrlParser: true });
-
-// Routes
-
-// A GET route for scraping the echoJS website
+mongoose.connect("mongodb://localhost/mongo18news", { useNewUrlParser: true });
+////////////////////////////////////////////////////////////////////////////////////
+/////     Routes     ////////
+//
+//   SCRAPING  ARTICLES     //////
+///////////////////////////////////////////////////////////////////////////////////
+// A GET route for scraping the USATODAY website
 app.get("/scrape", function(req, res) {
   // First, we grab the body of the html with axios
-  axios.get("http://www.echojs.com/").then(function(response) {
+  axios.get("http://www.usatoday.com/").then(function(response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(response.data);
 
-    // Now, we grab every h2 within an article tag, and do the following:
-    $("article h2").each(function(i, element) {
-      // Save an empty result object
+    // Now, we grab every <a>  tag the following attribute:
+    $("a.gnt_m_th_a").each(function(i, element) {
+      // Save an empty resuTlt object
       var result = {};
 
       // Add the text and href of every link, and save them as properties of the result object
-      result.title = $(this)
-        .children("a")
-        .text();
-      result.link = $(this)
-        .children("a")
-        .attr("href");
+      result.title =  $(element).text();
+      //  .attr("a")
+      //  .text();
+
+      result.link = $(this).attr("href");
+      //  .children("a")
+      //  .attr("href");
+
+    
+     // result.push({this});
+
+      //console.log(results);
 
       // Create a new Article using the `result` object built from scraping
       db.Article.create(result)
@@ -75,6 +74,8 @@ app.get("/scrape", function(req, res) {
     res.send("Scrape Complete");
   });
 });
+//////////////////////////////////////////////////////////////////////////////////////
+// Route for getting all Articles from the db
 
 // Route for getting all Articles from the db
 app.get("/articles", function(req, res) {
@@ -89,8 +90,9 @@ app.get("/articles", function(req, res) {
       res.json(err);
     });
 });
-
+/////////////////////////////////////////////////////////////////////////////////////////
 // Route for grabbing a specific Article by id, populate it with it's note
+
 app.get("/articles/:id", function(req, res) {
   // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
   db.Article.findOne({ _id: req.params.id })
@@ -105,8 +107,9 @@ app.get("/articles/:id", function(req, res) {
       res.json(err);
     });
 });
-
+/////////////////////////////////////////////////////////////////////////////////////////
 // Route for saving/updating an Article's associated Note
+
 app.post("/articles/:id", function(req, res) {
   // Create a new note and pass the req.body to the entry
   db.Note.create(req.body)
@@ -125,8 +128,9 @@ app.post("/articles/:id", function(req, res) {
       res.json(err);
     });
 });
-
+////////////////////////////////////////////////////////////////////////////////////////
 // Start the server
+
 app.listen(PORT, function() {
   console.log("App running on port " + PORT + "!");
 });
